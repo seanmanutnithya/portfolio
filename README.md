@@ -1,14 +1,14 @@
 # Creator Portfolio
 
-A dark-canvas personal portfolio and media kit for a **creator / influencer**: a full-screen
-project showcase, a filterable archive of brand collaborations with performance stats,
-audience numbers, an offering page, a global ⌘K search overlay and editorial content.
+A dark-canvas portfolio and media kit for a **TikTok creator**: a full-screen vertical-video
+showcase, a filterable archive of brand campaigns with performance stats (views, saves,
+GMV…), audience by age, an offering page, a global ⌘K search overlay and editorial content.
 
 Built from `Portfolio Showcase Wireframes.dc.html` (direction **1a**, the archive-first home),
 with **specialoffer.inc** as the reference for structure and tone.
 
 > **Re-targeting.** The build started as a nine-person design studio and was re-pointed at a
-> solo creator. The architecture did not change — only the content files and the labels. If the
+> solo TikTok creator. The architecture did not change — only the content files and the labels. If the
 > client is a graphic designer, a photographer or a musician instead, the content files in
 > `src/content/` are all you touch.
 
@@ -48,12 +48,12 @@ the mobile menu all work.
 
 | Route                        | Wireframe       | What it does                                                                                                                                                                                                                                                                 |
 | ---------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/`                          | `1a` + showcase | **Full-screen looping showcase** (see below) · hero with parallaxing portrait · marquee · **audience bars** (Instagram / TikTok / YouTube / newsletter) · 8-row collaborations band · offering list (hover swaps a sample into the hero) · contact · press · footer wordmark |
-| `/work`                      | `1d`            | Platform chips, format select, A–Z/year sort, list/grid toggle — all in the URL. Cursor-follow hover preview. Infinite scroll **plus** a real Load-more button. Empty state with clear-filters.                                                                              |
-| `/work/:slug`                | `1e`            | Full-bleed hero, sticky meta rail (brand / format / scope / usage), **performance stats**, block-rendered body, next/prev that walks the _filtered_ order you arrived with                                                                                                   |
+| `/`                          | `1a` + showcase | **Full-screen looping showcase** (see below) · hero with parallaxing portrait · marquee · **audience by age** · 8-row campaigns band · offering list (hover swaps a sample into the hero) · contact · press · footer wordmark |
+| `/work`                      | `1d`            | Campaign-type chips, format select, A–Z/year sort, list/grid toggle — all in the URL. Cursor-follow hover preview. Infinite scroll **plus** a real Load-more button. Empty state with clear-filters.                                                                              |
+| `/work/:slug`                | `1e`            | The post playing in a 9:16 frame, sticky meta rail (brand / campaign / format / scope), **performance stats**, block-rendered body, next/prev that walks the _filtered_ order you arrived with                                                                                                   |
 | `/about`                     | `1f`            | Bio, headline numbers, draggable behind-the-scenes scroller, offering list with a fixed 180×240 sample slot, brand list                                                                                                                                                      |
-| `/services`                  | `1g`            | "Work with me" — sticky index + accordion with GSAP-animated heights; `/services#ugc` opens and scrolls to that panel; every panel links to real collaborations                                                                                                              |
-| `/press`                     | `1h`            | Press/recognition toggle, grouped by year, external rows with `rel="noopener noreferrer"`, optional linked-collaboration chips                                                                                                                                               |
+| `/services`                  | `1g`            | "Work with me" — sticky index + accordion with GSAP-animated heights; `/services#ugc` opens and scrolls to that panel; every panel links to real campaigns                                                                                                              |
+| `/press`                     | `1h`            | Press/recognition toggle, grouped by year, external rows with `rel="noopener noreferrer"`, optional linked-campaign chips                                                                                                                                                   |
 | `/journal`, `/journal/:slug` | `1i`            | Index + article at a 62–68ch measure, `draft: true` hidden in production                                                                                                                                                                                                     |
 | `/contact`                   | `1j`            | Mailto-first. Inquiry form is behind `VITE_ENABLE_FORM`, off by default.                                                                                                                                                                                                     |
 | ⌘K overlay                   | `1k`            | Fuse.js over a generated index, `?q=` mirrored to the URL, ↑↓ + Enter, focus trap, scroll lock                                                                                                                                                                               |
@@ -61,29 +61,97 @@ the mobile menu all work.
 
 ### The home showcase
 
-The first thing on the home page is a full-screen reel of the featured projects.
+The first thing on the home page is a full-screen reel of the featured campaigns. The video is
+vertical: on a phone it fills the screen, and on anything wider it sits in a phone-shaped frame
+over a blurred copy of its own poster.
 
 - **Advance it** by touch swipe, mouse drag, `←` / `→`, or the on-screen buttons.
 - **It loops.** Past the last slide it returns to the first; backwards from the first it jumps
   to the last. The buttons are never disabled.
 - **Click a slide** to open that project's case study.
-- **Three projects play video** instead of a still (Slow Morning, Watchlist, Morning Miles),
-  marked with a `FILM` badge. Only the slide on screen plays, and nothing downloads until it
-  does (`preload="none"` + play on activation).
+- **Every slide plays its video.** Only the slide on screen plays, and nothing downloads until
+  it does (`preload="none"` + play on activation).
 - **Vertical scrolling is left alone.** A wheel or a vertical swipe carries you down to the
   rest of the page rather than being captured by the reel.
 
 `/work` is untouched by this — it remains the list/grid archive, and `?view=grid` is the same
 grid it always was.
 
-**Placeholder content.** The creator is called "Juno Reyes" and every collaboration, brand and
-number is invented. Nothing is branded as the reference site. Replace it as described below.
+### The intro
 
-**Sample imagery.** Photographs come from the Unsplash CDN and the three showcase clips from
-Pexels, both hotlinked via [src/content/media.js](src/content/media.js). They are scaffolding,
-not a shipping choice — Unsplash asks that production apps use their API and credit the
-photographer. Any media object left without a `src` falls back to a procedural plate (six
-variants, hashed from the media id), so an empty archive still reads as designed.
+An intro plays whenever the site is opened, over whichever page the visitor lands on
+([src/components/Intro.jsx](src/components/Intro.jsx)). It doubles as the loader, so how long
+it lasts depends on the visitor's connection:
+
+1. **Loading.** A phone frame flicks through five featured posters like a feed, and the
+   wordmark rises in. The counter and the bar along the phone's bottom edge show **real load
+   progress** for the first screen (see below). This phase lasts at least 1.1 s and at most
+   6 s.
+2. **Landing.** At 100 the feed flicks onto its final frame.
+3. **Out.** The phone expands:
+   - **On the home page** it morphs into the exact position of the first showcase slide. That
+     slide shows the same poster, so the intro dissolves into the page without a cut.
+   - **Anywhere else** it grows to a full-height 9:16 column and fades out.
+
+Measured in headless Chrome with the cache disabled, on the home page at desktop size:
+
+| Connection | Blank before the intro (JS download) | Intro on screen |
+| --- | --- | --- |
+| No throttle | 0.6 s | 2.7 s — counts up over the 1.1 s minimum |
+| Fast 3G | 0.9 s | 6.0 s — follows real progress; everything loaded when it lets go |
+| Slow 3G | 3.2 s | 8.4 s — hits the 6 s cap, then races to 100 |
+
+**What counts as loaded**, in [src/lib/loadProgress.js](src/lib/loadProgress.js): the intro's
+own frames, every image on screen in `<main>`, every on-screen video that will actually load
+(playing, autoplay, or preloading), web fonts, and the window `load` event. Off-screen and lazy
+media are ignored. A video counts double and reports partial progress through its readyState,
+so the heaviest file doesn't sit at 0 until it's suddenly done.
+
+**How the counter behaves.** It eases toward the real figure and never goes backwards. On a
+fast or cached load it's paced to count up over the 1.1 s minimum instead of snapping to 100.
+While a large file stalls, it creeps up to 8 points past reality, so it reads as alive, but
+never reaches 100 until loading is done or the 6 s cap is hit.
+
+**On a slow connection:**
+- The feed only flicks to frames that have actually downloaded, and holds otherwise.
+- The first and final frames are fetched at high priority.
+- A skeleton shimmer shows inside the phone until a frame arrives.
+- It lands on the final frame only if that frame loaded.
+
+**When it plays:**
+- **Every time the site is opened**: a typed URL, a bookmark, a link from another site, a new
+  tab.
+- **A refresh replays it only on the home page** (`/`). A refresh on any other page doesn't,
+  since the visitor is mid-browse rather than arriving.
+- **Not when the visitor comes back** with the browser's back/forward buttons, or moves between
+  pages inside the site. The check uses the browser's Navigation Timing API
+  (`performance.getEntriesByType("navigation")`), so nothing is stored.
+- **Never under `prefers-reduced-motion`, or with Data Saver on.** It isn't rendered at all.
+- **`?intro` forces it**, even on a refresh, which is handy while tweaking the animation or
+  showing it to a client.
+
+**Also:**
+- **Skippable.** Any click, key, wheel or touch fades it out in 0.3 s.
+- **Doesn't delay the page.** The page renders and loads underneath the whole time. The intro
+  starts on first paint without waiting for the GSAP chunk, and adds about 2 kB gzipped to the
+  entry bundle.
+- **Decorative.** It's `aria-hidden`, so screen readers go straight to the page.
+
+The phases and their CSS timings are documented at the top of
+[src/components/Intro.module.css](src/components/Intro.module.css). The limits (`MIN_MS`,
+`MAX_MS`) and the feed speed are constants at the top of `Intro.jsx`.
+
+**Placeholder content.** The creator is called "Juno Reyes", and every campaign, brand,
+publication and number is invented. The brands are fictional on purpose: a real brand next to
+made-up stats claims a partnership that never happened. Emails use `example.com` and social
+links point at platform home pages, so no placeholder sends a visitor to a stranger.
+
+**Sample media.** Fourteen vertical clips (360p, 0.6–1.5 MB) and their 720×1280 poster frames
+from [Mixkit](https://mixkit.co/free-stock-video/discover/vertical/) are downloaded into
+[public/media/](public/media/), not hotlinked. Mixkit's licence allows commercial use without
+attribution. Helpers in [src/content/media.js](src/content/media.js) turn a file stem into a
+media object: `poster(name, alt)`, `clip(name)`, `hoverClip(name)`. Any media object left
+without a `src` falls back to a procedural plate (six variants, hashed from the media id).
 
 ## Making it yours
 
@@ -116,40 +184,46 @@ Plain files in [src/content/](src/content/), each shaped exactly like its Sanity
 
 | File          | Holds                                                                                                      |
 | ------------- | ---------------------------------------------------------------------------------------------------------- |
-| `site.js`     | Name, handle, headline, bio, **audience numbers**, headline stats, emails, socials, brand list, taxonomies |
-| `projects.js` | The collaborations archive — the only file that needs real work                                            |
+| `site.js`     | Name, handle, headline, bio, **audience by age**, headline stats, emails, socials, brand list, taxonomies  |
+| `projects.js` | The campaign archive — the only file that needs real work                                                  |
 | `skills.js`   | What the creator offers a brand (formats, turnaround)                                                      |
 | `press.js`    | Press and recognition                                                                                      |
 | `services.js` | The five "work with me" panels                                                                             |
 | `journal.js`  | Posts, as block arrays                                                                                     |
-| `media.js`    | Where the sample photos and videos come from                                                               |
+| `media.js`    | `poster()` / `clip()` / `hoverClip()` helpers over `public/media/`                                         |
 
 **Two taxonomies drive the filters**, both in `site.js`:
 
-- `sectors` — platforms (Instagram, TikTok, YouTube, Offline). The chips on `/work`.
-- `disciplines` — formats (short form, long form, UGC, brand film, hosting…). The `Format`
-  column and the dropdown.
+- `sectors` — campaign types (Sponsored post, Branded series, TikTok Shop, Spark Ads / UGC,
+  LIVE). The chips on `/work`.
+- `disciplines` — formats (GRWM, tutorial, review, trend & dance, fit check, haul…). The
+  `Format` column and the dropdown.
 
 Swap those two arrays and the whole archive re-categorises. For a graphic designer they would
 be client type and design discipline; for a photographer, genre and deliverable.
 
-### 3. Real images
+### 3. Real videos
 
-Every media object in `projects.js` is built by one helper, so swapping sample imagery for
-real work is a single edit in [src/content/media.js](src/content/media.js) — or, per item,
-by writing the object out longhand:
+Every project has a `cover` (poster), a `video` (the post) and a `hoverVideo` (the `/work`
+preview), all built from one file stem:
 
 ```js
-cover: { id: "slow-morning-cover", src: "/media/slow-morning.jpg", alt: "…", ratio: "4/3" }
+cover: poster("glow-skincare", "Applying face cream in a towel robe"),
+video: clip("glow-skincare"),
+hoverVideo: hoverClip("glow-skincare"),
+tiktokUrl: "https://www.tiktok.com/@handle/video/7xxxxxxxxxxxxxxxxxx",
 ```
 
-[`Media`](src/components/Media.jsx) handles `srcSet`, `sizes`, `lqip` blur-up and lazy-loading
-below the fold. A `src` of `null` renders the procedural plate instead.
+To use the creator's real work, export each TikTok **without the watermark** (from drafts or
+the original camera file), encode it to about 720p H.264 with no audio and under 2.5 MB, and
+save it as `public/media/<name>.mp4`. Grab a frame as `<name>.jpg` for the poster. Setting
+`tiktokUrl` adds a "Watch on TikTok" link to the case study.
 
-Showcase video is opt-in per project:
+To embed the live post instead, add a `tiktok` block to the body. It renders TikTok's official
+embed player:
 
 ```js
-showcaseVideo: { src: "/media/slow-morning.mp4" }
+{ _type: "tiktok", videoId: "7xxxxxxxxxxxxxxxxxx", caption: "The launch post" }
 ```
 
 ### 4. Going to a CMS
@@ -164,7 +238,7 @@ migration; no route or component changes. The target schema is below.
 
 ```
 project       title slug client year sector disciplines[] cover hoverVideo
-              showcaseVideo intro stats[] blocks[] credits[] featured order seo
+              video tiktokUrl intro stats[] blocks[] credits[] featured order seo
 skill         name role sample order
 pressItem     date publication title url type linkedProject→project
 service       n title body images[] related[]→project
@@ -180,12 +254,13 @@ src/
   main.jsx              router, route-level code splitting
   layouts/RootLayout    Lenis → Nav → ScrollRestoration → Outlet → Footer → SearchOverlay
   routes/               one file per route, each exporting { loader, Component }
-  components/           Nav · Footer · SearchOverlay · ProjectSlides · ArchiveTable
+  components/           Nav · Footer · SearchOverlay · Intro · ProjectSlides · ArchiveTable
                         HoverMedia · Marquee · MediaScroller · RosterList · StatBars
                         Media · Blocks · Reveal · Skeleton · Seo
   hooks/                useLenis · useReducedMotion · useHoverMedia · useFilterParams
                         useScrollLock · useSearch
-  lib/                  content.js (the query layer) · motion.js · format.js · jsonld.js
+  lib/                  content.js (the query layer) · motion.js · loadProgress.js
+                        format.js · jsonld.js
   content/              site · projects · skills · press · services · journal · media
   styles/               tokens.css · globals.css
 ```
@@ -293,21 +368,14 @@ VITE_FORM_ENDPOINT=        # if unset, the form composes a mailto instead
 
 ## Not done yet
 
-1. **Real content** — the creator ("Juno Reyes"), every collaboration, every audience number
-   and every stat is invented. Replace `src/content/` wholesale.
-2. **The sample imagery does not match the copy.** Photos are assigned by hashing a media id,
-   so a reel campaign for a skincare brand is illustrated with whatever Unsplash photo that
-   hash landed on. It reads as placeholder, because it is. Curating a set that matches the
-   copy — and the warm charcoal palette — is worth doing before this is shown to anyone.
-3. **Your palette** — see the note above; the pin was unreadable.
-4. **`index.html` still carries the studio's `<title>` and meta description** ("New Format,
-   Inc. — Art direction & design"). Per-route titles come from `<Seo>`, but the static shell —
-   what crawlers and link previews see first — needs updating to the creator.
-5. **Lighthouse pass** — worth doing once real media is in.
-6. **The `1b` / `1c` home directions** were not built; `1a` matches the reference.
-7. **Shared-element hero transition** (archive row → project hero, FLIP). The route transition
+1. **Real content.** The creator ("Juno Reyes"), every campaign, brand, audience number and
+   press item is invented. Replace `src/content/` wholesale, and swap `public/media/` for the
+   creator's own exports.
+2. **Your palette.** See the note above; the pin was unreadable.
+3. **Lighthouse pass.** Worth doing once real media is in.
+4. **The `1b` / `1c` home directions** were not built; `1a` matches the reference.
+5. **Shared-element hero transition** (archive row → project hero, FLIP). The route transition
    is the 320ms fade; the FLIP handoff is not wired.
-8. **Hover-preview video on `/work`.** The cursor-follow preview loads a poster and has the
-   full dwell-then-play code path, but every `hoverVideo.url` is still `null`. (The _home
-   showcase_ videos do play — that is a separate field, `showcaseVideo`.)
-9. **No tests.** Verified by driving a headless browser, not by a committed suite.
+6. **The `tiktok` embed block is untested against a live post.** Every placeholder has
+   `tiktokUrl: null` and no `tiktok` block, since there are no real video ids to point at.
+7. **No tests.** Verified by driving a headless browser, not by a committed suite.

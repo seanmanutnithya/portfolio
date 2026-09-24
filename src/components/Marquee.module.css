@@ -1,0 +1,48 @@
+.band {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding-block: 0.625rem;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.track {
+  display: inline-flex;
+  align-items: center;
+  will-change: transform;
+}
+
+.clone {
+  display: inline-flex;
+  align-items: center;
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: clamp(0.75rem, 1.4vw, 1rem);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.sep {
+  color: var(--accent);
+  padding-inline: 1.25rem;
+}
+
+/* Reduced motion: no clipping, no clone, wraps like normal text. */
+.band[data-static="true"] {
+  white-space: normal;
+}
+
+.band[data-static="true"] .track {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.band[data-static="true"] .clone {
+  display: none;
+}

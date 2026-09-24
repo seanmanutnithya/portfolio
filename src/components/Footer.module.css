@@ -1,0 +1,62 @@
+.footer {
+  border-top: 1px solid var(--line);
+  padding-block: 2.5rem 1.5rem;
+  margin-top: 4rem;
+}
+
+.wordmark {
+  /* Slightly tighter than the hero — it is a sign-off, not a statement. */
+  font-size: clamp(1.75rem, 6vw, 5rem);
+  color: var(--ink);
+  margin-bottom: 2.5rem;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.75rem 1rem;
+  padding-block: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4375rem;
+  font-size: 0.8125rem;
+  color: var(--ink-dim);
+}
+
+.col a:hover {
+  color: var(--accent);
+}
+
+.col > span:first-child {
+  margin-bottom: 0.25rem;
+}
+
+.tz {
+  color: var(--mute);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+}
+
+.base {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+@media (min-width: 52.125rem) {
+  .footer {
+    padding-block: 4rem 2rem;
+  }
+
+  .cols {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}

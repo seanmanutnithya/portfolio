@@ -1,0 +1,151 @@
+.head {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.head h1 {
+  font-size: clamp(2rem, 6.5vw, 4.5rem);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+  padding-block: 1.5rem 4rem;
+  border-top: 1px solid var(--line);
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+.emails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.emails li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1875rem;
+}
+
+.email {
+  font-size: clamp(1rem, 2.2vw, 1.375rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.email:hover {
+  color: var(--accent);
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem 1rem;
+}
+
+.meta > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.offices {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.offices li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  font-size: 0.8125rem;
+}
+
+.address {
+  white-space: pre-line;
+  color: var(--ink-dim);
+}
+
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Inquiry form — phase 2, behind VITE_ENABLE_FORM
+--------------------------------------------------------------------------- */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  padding: 1rem;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  min-height: 2.75rem;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--mute);
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  border-color: var(--accent);
+}
+
+/* Off-screen rather than display:none — some bots skip hidden inputs. */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.formFoot {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.formFoot button[disabled] {
+  opacity: 0.55;
+  cursor: progress;
+}
+
+@media (min-width: 52.125rem) {
+  .head {
+    padding-top: 3.5rem;
+  }
+
+  .layout {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+}

@@ -1,0 +1,162 @@
+.frame {
+  position: relative;
+  aspect-ratio: var(--ratio, 4 / 3);
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg-raise);
+  border-radius: var(--radius);
+  isolation: isolate;
+  container-type: inline-size;
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-size: cover;
+  background-position: center;
+}
+
+/* ---------------------------------------------------------------------------
+   Procedural plate. Six deterministic variants, all built from the palette
+   tokens so a re-skin carries through automatically.
+--------------------------------------------------------------------------- */
+
+.plate {
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  background-color: var(--bg-raise);
+}
+
+.plate[data-variant="0"] {
+  background-image: repeating-linear-gradient(
+    45deg,
+    color-mix(in oklab, var(--line) 80%, transparent) 0 2px,
+    transparent 2px 11px
+  );
+}
+
+.plate[data-variant="1"] {
+  background-image: radial-gradient(
+      circle at 50% 120%,
+      var(--accent-wash) 0 38%,
+      transparent 38.4%
+    ),
+    radial-gradient(circle at 50% 120%, color-mix(in oklab, var(--line) 90%, transparent) 0 62%, transparent 62.4%),
+    radial-gradient(circle at 50% 120%, color-mix(in oklab, var(--line) 60%, transparent) 0 86%, transparent 86.4%);
+}
+
+.plate[data-variant="2"] {
+  background-image: linear-gradient(
+      100deg,
+      transparent 0 44%,
+      color-mix(in oklab, var(--accent) 22%, transparent) 44% 56%,
+      transparent 56%
+    ),
+    linear-gradient(180deg, var(--bg-raise) 0 50%, color-mix(in oklab, var(--line) 70%, transparent) 50% 100%);
+}
+
+.plate[data-variant="3"] {
+  background-image: radial-gradient(
+    color-mix(in oklab, var(--mute) 45%, transparent) 1px,
+    transparent 1.4px
+  );
+  background-size: 13px 13px;
+}
+
+.plate[data-variant="4"] {
+  background-image: repeating-linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--line) 85%, transparent) 0 1px,
+    transparent 1px 9px
+  );
+}
+
+.plate[data-variant="5"] {
+  background-image: conic-gradient(
+    from 210deg at 30% 15%,
+    var(--accent-wash) 0turn 0.12turn,
+    transparent 0.12turn 0.55turn,
+    color-mix(in oklab, var(--line) 80%, transparent) 0.55turn 1turn
+  );
+}
+
+/* Diagonal cross, the wireframe's own image-placeholder convention */
+.plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.22;
+  background-image: linear-gradient(
+      to top right,
+      transparent calc(50% - 0.5px),
+      var(--mute) calc(50% - 0.5px),
+      var(--mute) calc(50% + 0.5px),
+      transparent calc(50% + 0.5px)
+    ),
+    linear-gradient(
+      to bottom right,
+      transparent calc(50% - 0.5px),
+      var(--mute) calc(50% - 0.5px),
+      var(--mute) calc(50% + 0.5px),
+      transparent calc(50% + 0.5px)
+    );
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-image: radial-gradient(
+    color-mix(in oklab, var(--ink) 6%, transparent) 0.5px,
+    transparent 0.6px
+  );
+  background-size: 3px 3px;
+  mix-blend-mode: overlay;
+}
+
+.mark {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-mono);
+  font-size: clamp(1rem, 3vw, 1.75rem);
+  color: color-mix(in oklab, var(--ink) 40%, transparent);
+  line-height: 1;
+}
+
+.caption {
+  position: absolute;
+  inset-inline: 0.5rem;
+  bottom: 0.5rem;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mute);
+  min-width: 0;
+}
+
+.captionKind {
+  flex: none;
+  padding: 0.125rem 0.25rem;
+  border: 1px solid currentcolor;
+  border-radius: 2px;
+}
+
+.captionAlt {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Small slots hide the caption rather than clipping it */
+@container (max-width: 180px) {
+  .caption {
+    display: none;
+  }
+}

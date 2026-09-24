@@ -1,0 +1,305 @@
+/* ---------------------------------------------------------------------------
+   Site-open intro and loader. Driven by `data-phase` from Intro.jsx:
+
+   loading   as long as the connection needs (1.1s–6s)
+             · phone scales in, corners fade in, wordmark rises in
+             · the feed flicks every 380ms (JS moves `data-pos` on the frames)
+             · counter and scrubber show real load progress (JS writes them)
+   landing   0.34s — the feed flicks onto its final frame
+   out       · 0.00  corners, counter and wordmark fade · phone expands:
+                     - onto the first showcase slide, if one is on screen
+                     - to a full-height 9:16 column, anywhere else
+             · 0.60  overlay dissolves into the page
+             · 1.05  gone
+
+   Handoff (data-target="true", set when `out` begins): the phone lands
+   exactly over the showcase frame, the background clears around it
+   (0.60–1.00), then the overlay drops in 0.2s — the frame beneath shows the
+   same poster, so there is no visible cut.
+--------------------------------------------------------------------------- */
+
+.intro {
+  --phone-h: min(46svh, 26rem);
+  --phone-w: calc(var(--phone-h) * 9 / 16);
+  --flick: cubic-bezier(0.7, 0, 0.2, 1);
+
+  position: fixed;
+  inset: 0;
+  /* Above the nav (50) and search (60), below the skip link (100). */
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  cursor: pointer;
+  user-select: none;
+}
+
+.intro[data-phase="out"] {
+  animation:
+    backdrop 0.4s var(--ease) 0.6s forwards,
+    intro-out 0.45s var(--ease) 0.6s forwards;
+}
+
+/* Handoff: clear the background around the landed phone first, then drop
+   the overlay. Same animation names, so only the timing changes. */
+.intro[data-phase="out"][data-target="true"] {
+  --to-bg: transparent;
+  animation-duration: 0.4s, 0.2s;
+  animation-delay: 0.6s, 1s;
+}
+
+/* Skipped: a quick fade from wherever it had got to. A new keyframe name, so
+   it starts fresh. Specific enough to beat both phase rules above. */
+.intro[data-leaving="true"][data-phase] {
+  animation: intro-skip 0.3s var(--ease) forwards;
+}
+
+/* ---------------------------------------------------------------------------
+   Corners
+--------------------------------------------------------------------------- */
+
+.handle,
+.role,
+.hint,
+.counter {
+  position: absolute;
+  animation: fade-in 0.4s var(--ease) 0.1s both;
+}
+
+.intro[data-phase="out"] :is(.handle, .role, .hint, .counter) {
+  animation:
+    fade-in 0.4s var(--ease) 0.1s both,
+    fade-out 0.3s var(--ease) forwards;
+}
+
+.handle {
+  top: var(--gutter);
+  left: var(--gutter);
+}
+
+.role {
+  top: var(--gutter);
+  right: var(--gutter);
+}
+
+.hint {
+  bottom: var(--gutter);
+  right: var(--gutter);
+  color: var(--mute);
+}
+
+.counter {
+  right: var(--gutter);
+  bottom: calc(var(--gutter) + 1.5rem);
+  font-family: var(--font-mono);
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------------------
+   Wordmark — each letter rises out of a clipped line
+--------------------------------------------------------------------------- */
+
+.wordmark {
+  position: absolute;
+  left: var(--gutter);
+  bottom: calc(var(--gutter) + 1.25rem);
+  margin: 0;
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 12vw, 11rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: var(--tracking-display);
+  white-space: nowrap;
+}
+
+.intro[data-phase="out"] .wordmark {
+  animation: fade-out 0.3s var(--ease) forwards;
+}
+
+.char {
+  display: inline-block;
+  transform: translateY(105%);
+  animation: rise 0.7s var(--ease) calc(0.3s + var(--i) * 0.04s) forwards;
+}
+
+/* ---------------------------------------------------------------------------
+   Phone — the feed, then the expansion
+--------------------------------------------------------------------------- */
+
+.phone {
+  position: relative;
+  /* Above the wordmark and corners, so the expansion swallows them. */
+  z-index: 1;
+  width: var(--phone-w);
+  height: var(--phone-h);
+  overflow: hidden;
+  border: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
+  border-radius: 1.125rem;
+  background: var(--bg-raise);
+  box-shadow: 0 30px 80px -30px rgb(0 0 0 / 85%);
+  animation: phone-in 0.5s var(--ease) both;
+}
+
+.intro[data-phase="out"] .phone {
+  animation:
+    phone-in 0.5s var(--ease) both,
+    expand 0.6s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+/* Skeleton shimmer behind the frames — what shows while a frame is still
+   downloading on a slow connection, so the phone reads as loading rather
+   than empty. A loaded frame covers it. */
+.phone::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      100deg,
+      transparent 30%,
+      color-mix(in oklab, var(--ink) 9%, transparent) 50%,
+      transparent 70%
+    )
+    var(--bg-raise);
+  background-size: 250% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+/* Frames are stacked. The current one sits in the phone; the one before it
+   slides up and out; the rest wait below, moved there without a transition
+   so they never sweep across the screen. */
+.frame {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  transform: translateY(100%);
+}
+
+.frame[data-pos="current"] {
+  transform: translateY(0);
+  transition: transform 0.34s var(--flick);
+}
+
+.frame[data-pos="prev"] {
+  transform: translateY(-100%);
+  transition: transform 0.34s var(--flick);
+}
+
+/* Load progress along the phone's bottom edge — scaled from Intro.jsx. */
+.scrubber {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 1;
+  height: 3px;
+  background: var(--accent);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+}
+
+.intro[data-phase="out"] .scrubber {
+  animation: fade-out 0.2s linear forwards;
+}
+
+/* ---------------------------------------------------------------------------
+   Keyframes
+--------------------------------------------------------------------------- */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes rise {
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: -150% 0;
+  }
+}
+
+@keyframes phone-in {
+  from {
+    opacity: 0;
+    transform: scale(0.86) translateY(4%);
+  }
+}
+
+/* By default a full-height 9:16 column — covers a phone screen, and reads as
+   fullscreen TikTok on a wide one instead of cropping the poster to a
+   close-up. The --to-* properties retarget it onto the showcase frame when
+   Intro.jsx finds one. */
+@keyframes expand {
+  to {
+    width: var(--to-w, calc(100svh * 9 / 16));
+    height: var(--to-h, 100svh);
+    transform: translate(var(--to-x, 0), var(--to-y, 0));
+    border-radius: var(--to-r, 0);
+    border-color: transparent;
+    box-shadow: none;
+  }
+}
+
+@keyframes backdrop {
+  to {
+    background-color: var(--to-bg, var(--bg));
+  }
+}
+
+@keyframes intro-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes intro-skip {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Small screens — the hint would collide with the wordmark
+--------------------------------------------------------------------------- */
+
+@media (max-width: 52.125rem) {
+  .hint {
+    display: none;
+  }
+
+  .counter {
+    bottom: auto;
+    top: calc(var(--gutter) + 1.5rem);
+  }
+}

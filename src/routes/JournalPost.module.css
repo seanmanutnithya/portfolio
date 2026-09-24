@@ -1,0 +1,75 @@
+/* The article column is the measure, centred, not the full grid. */
+.head,
+.body,
+.foot {
+  max-width: 44rem;
+  margin-inline: auto;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 2rem;
+  padding-bottom: 1.5rem;
+}
+
+.head > a {
+  align-self: start;
+}
+
+.head > a:hover {
+  color: var(--accent);
+}
+
+.title {
+  font-size: clamp(1.75rem, 5vw, 3rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.cover {
+  max-width: 56rem;
+  margin-inline: auto;
+  margin-bottom: 2rem;
+}
+
+.body {
+  padding-bottom: 2.5rem;
+}
+
+/* Inside an article the prose measure is the column itself. */
+.body :global(.u-prose) {
+  max-width: none;
+  color: var(--ink);
+}
+
+.foot {
+  padding-block: 1.5rem 3rem;
+  border-top: 1px solid var(--line);
+}
+
+.next {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.nextTitle {
+  font-size: clamp(1.125rem, 3vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.next:hover .nextTitle {
+  color: var(--accent);
+}
+
+@media (min-width: 52.125rem) {
+  .head {
+    padding-top: 3.5rem;
+  }
+}

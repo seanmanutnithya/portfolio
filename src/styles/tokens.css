@@ -1,0 +1,98 @@
+/* ---------------------------------------------------------------------------
+   TOKENS — the only file that should contain a raw colour value.
+   Swap the six hexes in @theme to re-skin the entire site.
+   Values transcribed from the wireframe handoff sheet, section 03.
+--------------------------------------------------------------------------- */
+
+@theme {
+  /* --- palette ---------------------------------------------------------- */
+  --color-bg: #0f0e0c; /* dark canvas */
+  --color-ink: #f2f0eb; /* primary type */
+  --color-mute: #8b8377; /* meta type — only at >=11px bold */
+  --color-line: #2a2620; /* hairlines, table rules */
+  --color-accent: #e0491b; /* vermilion */
+  --color-paper: #e9e5db; /* inverted sections */
+
+  /* --- breakpoints (mobile-first: sm 640 / md 834 / lg 1024 / xl 1440) --- */
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 52.125rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 90rem;
+
+  /* --- families --------------------------------------------------------- */
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+}
+
+:root {
+  color-scheme: dark;
+
+  /* Semantic aliases. Components reference these, never the raw hexes,
+     so a palette swap never needs to touch a component. */
+  --bg: var(--color-bg);
+  --ink: var(--color-ink);
+  --mute: var(--color-mute);
+  --line: var(--color-line);
+  --accent: var(--color-accent);
+  --paper: var(--color-paper);
+
+  /* Derived surfaces */
+  --bg-raise: color-mix(in oklab, var(--bg) 88%, var(--ink));
+  --ink-dim: color-mix(in oklab, var(--ink) 62%, var(--bg));
+  --line-soft: color-mix(in oklab, var(--line) 70%, var(--bg));
+  --accent-wash: color-mix(in oklab, var(--accent) 12%, transparent);
+  --accent-edge: color-mix(in oklab, var(--accent) 45%, transparent);
+
+  /* --- type scale ------------------------------------------------------- */
+  --step-display: clamp(2.75rem, 9.2vw, 10.5rem); /* 44 → 168 */
+  --step-h2: clamp(1.75rem, 3.4vw, 3.5rem); /* 28 → 56  */
+  --step-h3: clamp(1.25rem, 1.8vw, 1.75rem);
+  --step-body: 1rem;
+  --step-meta: 0.6875rem; /* 11 */
+
+  --leading-display: 0.9;
+  --leading-body: 1.45;
+  --tracking-display: -0.03em;
+  --tracking-meta: 0.07em;
+
+  /* --- layout ----------------------------------------------------------- */
+  --gutter: 1.25rem; /* 20 */
+  --max: 105rem; /* 1680 */
+  --nav-h: 2.75rem; /* 44 — never grows */
+  --rail-top: 4.5rem; /* 72 — sticky offset */
+  --radius: 3px;
+
+  /* --- motion ----------------------------------------------------------- */
+  --dur-fast: 120ms;
+  --dur-page: 320ms;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (min-width: 52.125rem) {
+  :root {
+    --gutter: 1.75rem; /* 28 */
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --gutter: 2.5rem; /* 40 */
+  }
+}
+
+/* Honour the OS setting globally; components also check it in JS before
+   building any GSAP timeline. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-page: 1ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,166 @@
+.head {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.head h1 {
+  font-size: clamp(2.25rem, 7vw, 5.5rem);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  padding-bottom: 3rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Sticky index
+--------------------------------------------------------------------------- */
+
+.index {
+  display: none;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.indexList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.indexLink {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding-block: 0.1875rem;
+  color: var(--ink-dim);
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.indexLink:hover,
+.indexLink[data-active="true"] {
+  color: var(--accent);
+}
+
+.indexLink[data-active="true"] {
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------------------
+   Accordion
+--------------------------------------------------------------------------- */
+
+.panels {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.panel {
+  border-top: 1px solid var(--line);
+  scroll-margin-top: var(--rail-top);
+}
+
+.panel:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.panel h2 {
+  margin: 0;
+}
+
+.panelHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  min-height: 3.5rem;
+  padding-block: 0.75rem;
+  text-align: left;
+}
+
+.panelTitle {
+  font-size: clamp(1.125rem, 3vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.panelHead:hover .panelTitle {
+  color: var(--accent);
+}
+
+.panelSign {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--mute);
+  flex: none;
+}
+
+/* Height is driven by GSAP; overflow keeps the collapsed state clean. */
+.panelBody {
+  overflow: hidden;
+}
+
+.panelInner {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+}
+
+.panelMedia {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  max-width: 26rem; /* two 9:16 stills side by side, not two posters */
+}
+
+.related {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.relatedList {
+  display: flex;
+  flex-direction: column;
+}
+
+.relatedLink {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 2.75rem;
+  padding-block: 0.375rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.relatedLink:hover {
+  color: var(--accent);
+}
+
+@media (min-width: 52.125rem) {
+  .head {
+    padding-top: 3.5rem;
+  }
+
+  .layout {
+    grid-template-columns: 9rem minmax(0, 1fr);
+    gap: 3rem;
+    padding-bottom: 5rem;
+  }
+
+  .index {
+    display: flex;
+    position: sticky;
+    top: var(--rail-top);
+    align-self: start;
+  }
+}

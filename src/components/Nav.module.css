@@ -1,0 +1,173 @@
+.nav {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 50;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+
+  /* Legible over the canvas and over full-bleed media alike. */
+  mix-blend-mode: difference;
+  color: #fff;
+}
+
+/* While the menu is open the nav sits above it with no blending, otherwise
+   the close button inverts against the menu backdrop. */
+.nav[data-open="true"] {
+  mix-blend-mode: normal;
+  color: var(--ink);
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4375rem;
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.dot {
+  width: 0.6875rem;
+  height: 0.6875rem;
+  border: 1.5px solid currentcolor;
+  border-radius: 50%;
+  flex: none;
+}
+
+.brandShort {
+  display: inline;
+}
+
+.brandFull {
+  display: none;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.link {
+  color: inherit;
+  display: none;
+  white-space: nowrap;
+}
+
+.link:hover {
+  color: var(--accent);
+}
+
+.active {
+  color: var(--accent);
+}
+
+.burger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  margin-right: -0.75rem;
+  font-size: 0.875rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Mobile menu — full screen, 48px targets.
+--------------------------------------------------------------------------- */
+
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: calc(var(--nav-h) + 1.5rem) var(--gutter) 2rem;
+  background: var(--bg);
+}
+
+.menu[hidden] {
+  display: none;
+}
+
+.menuLinks {
+  display: flex;
+  flex-direction: column;
+}
+
+.menuLink {
+  display: flex;
+  align-items: center;
+  min-height: 3rem; /* 48 */
+  font-size: clamp(1.75rem, 8vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  border-bottom: 1px solid var(--line);
+}
+
+.menuLink:hover,
+.menuLinkActive {
+  color: var(--accent);
+}
+
+.menuFoot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.menuSearch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 3rem;
+  padding-inline: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+/* ---------------------------------------------------------------------------
+   >= 834px — links surface, menu is gone.
+--------------------------------------------------------------------------- */
+
+@media (min-width: 52.125rem) {
+  .brandShort {
+    display: none;
+  }
+
+  .brandFull {
+    display: inline;
+  }
+
+  .link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .burger {
+    display: none;
+  }
+
+  .menu {
+    display: none;
+  }
+}

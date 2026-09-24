@@ -1,0 +1,68 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 1rem;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4375rem;
+  min-height: 2.75rem;
+}
+
+.label {
+  font-size: clamp(0.9375rem, 2vw, 1.125rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.item:hover .label {
+  color: var(--accent);
+}
+
+.track {
+  display: block;
+  height: 0.3125rem;
+  background: var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.bar {
+  display: block;
+  height: 100%;
+  background: var(--mute);
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.item:hover .bar {
+  background: var(--accent);
+}
+
+@media (min-width: 52.125rem) {
+  /* One row however many items there are (four platforms, five age
+     brackets…), so there is never an orphan on the second line. */
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    grid-auto-flow: column;
+    gap: 1.25rem;
+  }
+}
+
+/* The number itself — this is the thing a brand reads first. */
+.figure {
+  font-size: clamp(1.5rem, 3.4vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.item:hover .figure {
+  color: var(--accent);
+}
+
+.handle {
+  margin-top: -0.125rem;
+}

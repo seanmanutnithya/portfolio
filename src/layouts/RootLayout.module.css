@@ -1,0 +1,12 @@
+.shell {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  /* Clears the fixed 44px nav. Routes that want full-bleed media under the
+     nav pull it back with a negative margin on their hero. */
+  padding-top: var(--nav-h);
+}

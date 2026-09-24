@@ -1,0 +1,302 @@
+.stage {
+  position: relative;
+  /* Full bleed: sits under the fixed 44px nav and fills the viewport. */
+  margin-top: calc(var(--nav-h) * -1);
+  height: 100svh;
+  background: var(--bg);
+  isolation: isolate;
+}
+
+.rail {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  cursor: grab;
+  scrollbar-width: none;
+  touch-action: pan-x pan-y;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.rail:active {
+  cursor: grabbing;
+}
+
+.rail:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -4px;
+}
+
+/* ---------------------------------------------------------------------------
+   Slide
+--------------------------------------------------------------------------- */
+
+.slide {
+  position: relative;
+  flex: none;
+  width: 100%;
+  height: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Blurred copy of the poster behind the phone frame — wide screens only. */
+.backdrop {
+  display: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(48px) brightness(0.45) saturate(1.2);
+  transform: scale(1.15);
+  pointer-events: none;
+}
+
+/* The 9:16 frame. Full-bleed on a phone, a phone-sized card on wider
+   screens (see the min-width query at the bottom). */
+.phone {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+}
+
+/* Covers both the <img> and the <video> so they are interchangeable. */
+.media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  background: var(--bg-raise);
+  transition: transform 0.6s var(--ease);
+}
+
+.slide:hover .media {
+  transform: scale(1.02);
+}
+
+.index {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Marks a slide that plays motion rather than a still. */
+.badge {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--accent);
+  padding: 0.125rem 0.3125rem;
+  border-radius: 2px;
+}
+
+.fallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-image: repeating-linear-gradient(
+    45deg,
+    color-mix(in oklab, var(--line) 80%, transparent) 0 2px,
+    transparent 2px 11px
+  );
+}
+
+/* Keeps the caption legible over any photograph */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    color-mix(in oklab, var(--bg) 92%, transparent) 0%,
+    color-mix(in oklab, var(--bg) 55%, transparent) 28%,
+    transparent 58%
+  );
+  pointer-events: none;
+}
+
+.caption {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: var(--gutter);
+  padding-bottom: 4.5rem;
+  max-width: var(--max);
+  margin-inline: auto;
+}
+
+.title {
+  font-size: clamp(2rem, 7vw, 5.5rem);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: var(--tracking-display);
+  text-wrap: balance;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.875rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.cta {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-top: 0.25rem;
+}
+
+.slide:hover .cta,
+.slide:focus-visible .cta {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------------------------------------------------------------------------
+   Controls
+--------------------------------------------------------------------------- */
+
+.controls {
+  position: absolute;
+  right: var(--gutter);
+  bottom: 1.25rem;
+  z-index: 2;
+  display: flex;
+  gap: 0.375rem;
+}
+
+.arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in oklab, var(--bg) 70%, transparent);
+  backdrop-filter: blur(8px);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+
+.arrow:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.arrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.progress {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 2;
+  height: 2px;
+  background: var(--line);
+}
+
+.progressBar {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: 0 50%;
+  transition: transform var(--dur-page) var(--ease);
+}
+
+.hint {
+  position: absolute;
+  left: var(--gutter);
+  bottom: 1.5rem;
+  z-index: 2;
+}
+
+/* The counter lives inside each slide; this is the announcement only. */
+.live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 52.125rem) {
+  .hint {
+    display: none;
+  }
+
+  .caption {
+    padding-bottom: 4rem;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   >= 834px — the vertical video sits in a phone-shaped frame, right of the
+   caption, over its own blurred poster.
+--------------------------------------------------------------------------- */
+
+@media (min-width: 52.125rem) {
+  .backdrop {
+    display: block;
+  }
+
+  .phone {
+    inset: auto;
+    top: calc(50% + var(--nav-h) / 2);
+    right: max(var(--gutter), 8vw);
+    height: min(78svh, 48rem);
+    aspect-ratio: 9 / 16;
+    transform: translateY(-50%);
+    border: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
+    border-radius: 1.25rem;
+    box-shadow: 0 30px 80px -30px rgb(0 0 0 / 85%);
+  }
+
+  .scrim {
+    background: linear-gradient(
+      to right,
+      color-mix(in oklab, var(--bg) 80%, transparent) 0%,
+      color-mix(in oklab, var(--bg) 35%, transparent) 50%,
+      transparent 75%
+    );
+  }
+
+  /* Keep the title clear of the phone frame. */
+  .caption {
+    inset-inline: 0 auto;
+    max-width: min(56vw, 48rem);
+    margin-inline: 0;
+  }
+}

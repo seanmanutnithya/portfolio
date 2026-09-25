@@ -1,3 +1,7 @@
+# Demo
+
+`Link : https://juno-reyes.sean-manutnithya-cs.workers.dev/`
+
 # Creator Portfolio
 
 A dark-canvas portfolio and media kit for a **TikTok creator**: a full-screen vertical-video
@@ -46,18 +50,18 @@ Every route in the wireframe exists and renders. Verified in a headless browser:
 routes load with zero console errors, and search, filtering, the accordion, hover previews and
 the mobile menu all work.
 
-| Route                        | Wireframe       | What it does                                                                                                                                                                                                                                                                 |
-| ---------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Route                        | Wireframe       | What it does                                                                                                                                                                                                                  |
+| ---------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `/`                          | `1a` + showcase | **Full-screen looping showcase** (see below) · hero with parallaxing portrait · marquee · **audience by age** · 8-row campaigns band · offering list (hover swaps a sample into the hero) · contact · press · footer wordmark |
-| `/work`                      | `1d`            | Campaign-type chips, format select, A–Z/year sort, list/grid toggle — all in the URL. Cursor-follow hover preview. Infinite scroll **plus** a real Load-more button. Empty state with clear-filters.                                                                              |
-| `/work/:slug`                | `1e`            | The post playing in a 9:16 frame, sticky meta rail (brand / campaign / format / scope), **performance stats**, block-rendered body, next/prev that walks the _filtered_ order you arrived with                                                                                                   |
-| `/about`                     | `1f`            | Bio, headline numbers, draggable behind-the-scenes scroller, offering list with a fixed 180×240 sample slot, brand list                                                                                                                                                      |
-| `/services`                  | `1g`            | "Work with me" — sticky index + accordion with GSAP-animated heights; `/services#ugc` opens and scrolls to that panel; every panel links to real campaigns                                                                                                              |
-| `/press`                     | `1h`            | Press/recognition toggle, grouped by year, external rows with `rel="noopener noreferrer"`, optional linked-campaign chips                                                                                                                                                   |
-| `/journal`, `/journal/:slug` | `1i`            | Index + article at a 62–68ch measure, `draft: true` hidden in production                                                                                                                                                                                                     |
-| `/contact`                   | `1j`            | Mailto-first. Inquiry form is behind `VITE_ENABLE_FORM`, off by default.                                                                                                                                                                                                     |
-| ⌘K overlay                   | `1k`            | Fuse.js over a generated index, `?q=` mirrored to the URL, ↑↓ + Enter, focus trap, scroll lock                                                                                                                                                                               |
-| `*`                          | `1l`            | Doubles as the root `errorElement`; distinguishes a 404 from a crashed loader                                                                                                                                                                                                |
+| `/work`                      | `1d`            | Campaign-type chips, format select, A–Z/year sort, list/grid toggle — all in the URL. Cursor-follow hover preview. Infinite scroll **plus** a real Load-more button. Empty state with clear-filters.                          |
+| `/work/:slug`                | `1e`            | The post playing in a 9:16 frame, sticky meta rail (brand / campaign / format / scope), **performance stats**, block-rendered body, next/prev that walks the _filtered_ order you arrived with                                |
+| `/about`                     | `1f`            | Bio, headline numbers, draggable behind-the-scenes scroller, offering list with a fixed 180×240 sample slot, brand list                                                                                                       |
+| `/services`                  | `1g`            | "Work with me" — sticky index + accordion with GSAP-animated heights; `/services#ugc` opens and scrolls to that panel; every panel links to real campaigns                                                                    |
+| `/press`                     | `1h`            | Press/recognition toggle, grouped by year, external rows with `rel="noopener noreferrer"`, optional linked-campaign chips                                                                                                     |
+| `/journal`, `/journal/:slug` | `1i`            | Index + article at a 62–68ch measure, `draft: true` hidden in production                                                                                                                                                      |
+| `/contact`                   | `1j`            | Mailto-first. Inquiry form is behind `VITE_ENABLE_FORM`, off by default.                                                                                                                                                      |
+| ⌘K overlay                   | `1k`            | Fuse.js over a generated index, `?q=` mirrored to the URL, ↑↓ + Enter, focus trap, scroll lock                                                                                                                                |
+| `*`                          | `1l`            | Doubles as the root `errorElement`; distinguishes a 404 from a crashed loader                                                                                                                                                 |
 
 ### The home showcase
 
@@ -95,11 +99,11 @@ it lasts depends on the visitor's connection:
 
 Measured in headless Chrome with the cache disabled, on the home page at desktop size:
 
-| Connection | Blank before the intro (JS download) | Intro on screen |
-| --- | --- | --- |
-| No throttle | 0.6 s | 2.7 s — counts up over the 1.1 s minimum |
-| Fast 3G | 0.9 s | 6.0 s — follows real progress; everything loaded when it lets go |
-| Slow 3G | 3.2 s | 8.4 s — hits the 6 s cap, then races to 100 |
+| Connection  | Blank before the intro (JS download) | Intro on screen                                                  |
+| ----------- | ------------------------------------ | ---------------------------------------------------------------- |
+| No throttle | 0.6 s                                | 2.7 s — counts up over the 1.1 s minimum                         |
+| Fast 3G     | 0.9 s                                | 6.0 s — follows real progress; everything loaded when it lets go |
+| Slow 3G     | 3.2 s                                | 8.4 s — hits the 6 s cap, then races to 100                      |
 
 **What counts as loaded**, in [src/lib/loadProgress.js](src/lib/loadProgress.js): the intro's
 own frames, every image on screen in `<main>`, every on-screen video that will actually load
@@ -113,12 +117,14 @@ While a large file stalls, it creeps up to 8 points past reality, so it reads as
 never reaches 100 until loading is done or the 6 s cap is hit.
 
 **On a slow connection:**
+
 - The feed only flicks to frames that have actually downloaded, and holds otherwise.
 - The first and final frames are fetched at high priority.
 - A skeleton shimmer shows inside the phone until a frame arrives.
 - It lands on the final frame only if that frame loaded.
 
 **When it plays:**
+
 - **Every time the site is opened**: a typed URL, a bookmark, a link from another site, a new
   tab.
 - **A refresh replays it only on the home page** (`/`). A refresh on any other page doesn't,
@@ -131,6 +137,7 @@ never reaches 100 until loading is done or the 6 s cap is hit.
   showing it to a client.
 
 **Also:**
+
 - **Skippable.** Any click, key, wheel or touch fades it out in 0.3 s.
 - **Doesn't delay the page.** The page renders and loads underneath the whole time. The intro
   starts on first paint without waiting for the GSAP chunk, and adds about 2 kB gzipped to the
@@ -182,15 +189,15 @@ aliases (`--ink`, `--accent`, …), which are derived from these.
 
 Plain files in [src/content/](src/content/), each shaped exactly like its Sanity document:
 
-| File          | Holds                                                                                                      |
-| ------------- | ---------------------------------------------------------------------------------------------------------- |
-| `site.js`     | Name, handle, headline, bio, **audience by age**, headline stats, emails, socials, brand list, taxonomies  |
-| `projects.js` | The campaign archive — the only file that needs real work                                                  |
-| `skills.js`   | What the creator offers a brand (formats, turnaround)                                                      |
-| `press.js`    | Press and recognition                                                                                      |
-| `services.js` | The five "work with me" panels                                                                             |
-| `journal.js`  | Posts, as block arrays                                                                                     |
-| `media.js`    | `poster()` / `clip()` / `hoverClip()` helpers over `public/media/`                                         |
+| File          | Holds                                                                                                     |
+| ------------- | --------------------------------------------------------------------------------------------------------- |
+| `site.js`     | Name, handle, headline, bio, **audience by age**, headline stats, emails, socials, brand list, taxonomies |
+| `projects.js` | The campaign archive — the only file that needs real work                                                 |
+| `skills.js`   | What the creator offers a brand (formats, turnaround)                                                     |
+| `press.js`    | Press and recognition                                                                                     |
+| `services.js` | The five "work with me" panels                                                                            |
+| `journal.js`  | Posts, as block arrays                                                                                    |
+| `media.js`    | `poster()` / `clip()` / `hoverClip()` helpers over `public/media/`                                        |
 
 **Two taxonomies drive the filters**, both in `site.js`:
 
